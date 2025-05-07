@@ -3,6 +3,14 @@
 # Exit immediately
 set -e 
 
+# Set dotfiles marker for idempotency
+DOTFILES_MARKER="$HOME/.dotfiles-installed"
+
+if [ -f "$DOTFILES_MARKER" ]; then
+  echo "Dotfiles already installed, skipping..."
+  exit 0
+fi
+
 # Update package manager
 sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get autoremove -y 
 
@@ -51,3 +59,7 @@ cd $HOME/Workplace/dotfiles
 if command -v zsh >/dev/null; then
   sudo chsh -s $(command -v zsh) $USER
 fi
+
+
+# Create marker file
+touch "$DOTFILES_MARKER"
